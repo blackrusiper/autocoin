@@ -3,7 +3,31 @@ import numpy as np
 import pymysql
 import configparser
 
-def connmysql():
+
+
+# def connmysql():
+#     config = configparser.ConfigParser()
+#     config.read('/aicsvc/app/config.ini')
+#     myip = config['MYSQL']['myip']
+#     myport = config['MYSQL']['myport']
+#     myid = config['MYSQL']['myid']
+#     mypw = config['MYSQL']['mypw']
+#
+#     connmysql = pymysql.connect(myip, myid, mypw, db='coin', charset='utf8', port=myport)# %myport
+#     curs = connmysql.cursor(pymysql.cursors.DictCursor)
+#     # listsql = "select `NAME` from INFO"
+#     sql = " select * from coin.MAIMAIDATA where NAME='%s' order by NO desc " %BTC
+#     curs.execute(sql)
+#     # curs.execute(listsql)
+#     rows = curs.fetchall()
+#     print(rows);
+#     connmysql.commit()
+#     connmysql.close()
+#     return connmysql
+
+# def load_chart_data(fpath):
+
+def load_chart_data():
     config = configparser.ConfigParser()
     config.read('/aicsvc/app/config.ini')
     myip = config['MYSQL']['myip']
@@ -11,22 +35,19 @@ def connmysql():
     myid = config['MYSQL']['myid']
     mypw = config['MYSQL']['mypw']
 
-    connmysql = pymysql.connect(myip, myid, mypw, db='coin', charset='utf8', port=myport)# %myport
-    # curs = connmysql.cursor(pymysql.cursors.DictCursor)
+    connmysql = pymysql.connect(myip, myid, mypw, db='coin', charset='utf8', port=23306)# %myport
+    curs = connmysql.cursor(pymysql.cursors.DictCursor)
     # listsql = "select `NAME` from INFO"
-    sql = " select * from coin.MAIMAIDATA where NAME='%s' order by NO desc " %BTC
-    # curs.execute(sql)
+    sql = " select * from coin.MAIMAIDATA where NAME='BTC' order by NO desc " # %BTC
+    curs.execute(sql)
     # curs.execute(listsql)
-    # rows = curs.fetchall()
-    # connmysql.commit()
-    # connmysql.close()
-    return connmysql
-
-# def load_chart_data(fpath):
-
-def load_chart_data(connmysql):
+    rows = curs.fetchall()
+    print(rows);
+    connmysql.commit()
+    connmysql.close()
     # chart_data = pd.read_csv(fpath, thousands=',', header=None)
-    chart_data = pd.read_sql(sql,connmysql)
+    # chart_data = pd.read_sql(sql,connmysql)
+    chart_data = pd.DataFrame(rows)
     chart_data.columns = ['date', 'open', 'high', 'low', 'close', 'volume', 'inst', 'frgn']
     chart_data['inst'] = pd.to_numeric(chart_data['inst'].str.replace(',', ''), errors='coerce')
     chart_data['frgn'] = pd.to_numeric(chart_data['frgn'].str.replace(',', ''), errors='coerce')
@@ -100,3 +121,5 @@ def build_training_data(prep_data):
 
 
 # chart_data = pd.read_csv(fpath, encoding='CP949', thousands=',', engine='python')
+
+data = load_chart_data()
