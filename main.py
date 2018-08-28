@@ -25,8 +25,9 @@ rows = curs.fetchall()
 if __name__ == '__main__':
     # stock_code = '005930'  # 삼성전자
     for i in rows:
-        stock_code = i[NAME]
+        stock_code = i['NAME']
         # 로그 기록
+        # stock_code = 'BTC'
         log_dir = os.path.join(settings.BASE_DIR, 'logs/%s' % stock_code)
         timestr = settings.get_time_str()
         if not os.path.exists('logs/%s' % stock_code):
@@ -41,19 +42,17 @@ if __name__ == '__main__':
 
         # 주식 데이터 준비
         chart_data = data_manager.load_chart_data(stock_code)
-        #
-        # chart_data = data_manager.load_chart_data(
-        #     os.path.join(settings.BASE_DIR,
-        #                  'data/chart_data/{}.csv'.format(stock_code)))
+
         prep_data = data_manager.preprocess(chart_data)
         training_data = data_manager.build_training_data(prep_data)
 
         # 기간 필터링
-        training_data = training_data[(training_data['date'] >= '2018-01-01 00:00:00') &
-                                      (training_data['date'] <= '2018-12-31 00:00:00')]
-        # training_data = training_data[(training_data['date'] >= '2017-01-01') &
-        #                               (training_data['date'] <= '2017-12-31')]
+        # training_data = training_data[(training_data['date'] >= '2018-01-01 00:00:00') &
+        #                               (training_data['date'] <= '2018-08-28 12:00:00')]
+        training_data = training_data[(training_data['date'] >= '2018-07-01') &
+                                      (training_data['date'] <= '2018-12-31')]
         training_data = training_data.dropna()
+        # print("Training DATA RANGE : ", training_data);
 
         # 차트 데이터 분리
         features_chart_data = ['date', 'open', 'high', 'low', 'close', 'volume']
@@ -74,9 +73,8 @@ if __name__ == '__main__':
         # 강화학습 시작
         policy_learner = PolicyLearner(
             stock_code=stock_code, chart_data=chart_data, training_data=training_data,
-            min_trading_unit=1, max_trading_unit=2, delayed_reward_threshold=.2, lr=.001)
-        policy_learner.fit(balance=10000000, num_epoches=1000,
-                           discount_factor=0, start_epsilon=.5)
+            min_trading_unit=2, max_trading_unit=4, delayed_reward_threshold=.2, lr=.001)
+        policy_learner.fit(balance=10000000, num_epoches=1000, discount_factor=0, start_epsilon=.5)
 
         # 정책 신경망을 파일로 저장
         model_dir = os.path.join(settings.BASE_DIR, 'models/%s' % stock_code)

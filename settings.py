@@ -7,7 +7,7 @@ import platform
 
 import pandas as pd
 
-pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_rows', 50000)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 
@@ -19,16 +19,16 @@ DEMO = True
 TRANSACTION_TERM = 2  # 2 seconds
 PROCESSING_TERM = 2  # 2 seconds
 MARKET_WAIT_TERM = 10  # 10 seconds
-MAX_TARGET_STOCK_PRICE = 500000
-MAX_BUY_PRICE_AGG = 1000000
-MAX_BUY_PRICE_DEF = 500000
+MAX_TARGET_STOCK_PRICE = 5000000
+MAX_BUY_PRICE_AGG = 100000
+MAX_BUY_PRICE_DEF = 100000
 BUY_UNIT_AGG = 500000
 BUY_UNIT_DEF = 100000
 TGT_TOP_DIFF = 10
 TGT_BOTTOM_DIFF = -3
 MIN_PRICE_VOLUME = 10000 * 10000
 # Number of Holdings
-MAX_NUM_HOLDINGS_AGG = 12
+MAX_NUM_HOLDINGS_AGG = 4
 MAX_NUM_HOLDINGS_DEF = 5
 # MAX_NUM_HOLDINGS_DEF = 0
 # Monitoring Stocks
@@ -37,7 +37,7 @@ FIVEMIN_INCDEC_RATE = 0.025
 
 
 # Settings for Server/
-SERVER_ADDR = "localhost"
+SERVER_ADDR = "0.0.0.0"
 SERVER_PORT = 8000
 SERVER_URL = "http://%s:%s" % (SERVER_ADDR, SERVER_PORT)
 SERVER_API_URL = "http://%s:%s/api" % (SERVER_ADDR, SERVER_PORT)
