@@ -8,7 +8,6 @@ from agent import Agent
 from policy_network import PolicyNetwork
 from visualizer import Visualizer
 
-
 logger = logging.getLogger(__name__)
 locale.setlocale(locale.LC_ALL, 'ko_KR.UTF-8')
 
@@ -40,8 +39,8 @@ class PolicyLearner:
         self.training_data_idx = -1
 
     def fit(
-        self, num_epoches=1000, max_memory=6000, balance=10000000,
-        discount_factor=0, start_epsilon=.5, learning=True):
+            self, num_epoches=1000, max_memory=60, balance=10000000,
+            discount_factor=0, start_epsilon=.5, learning=True):
         logger.info("LR: {lr}, DF: {discount_factor}, "
                     "TU: [{min_trading_unit}, {max_trading_unit}], "
                     "DRT: {delayed_reward_threshold}".format(
@@ -71,7 +70,7 @@ class PolicyLearner:
         epoch_win_cnt = 0
 
         # 학습 반복
-        for epoch in range(num_epoches):    
+        for epoch in range(num_epoches):
             # 에포크 관련 정보 초기화
             loss = 0.
             itr_cnt = 0
@@ -90,7 +89,7 @@ class PolicyLearner:
             memory_num_stocks = []
             memory_exp_idx = []
             memory_learning_idx = []
-            
+
             # 환경, 에이전트, 정책 신경망 초기화
             self.environment.reset()
             self.agent.reset()
