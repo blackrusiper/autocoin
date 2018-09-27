@@ -15,7 +15,7 @@ locale.setlocale(locale.LC_ALL, 'ko_KR.UTF-8')
 class PolicyLearner:
 
     def __init__(self, stock_code, chart_data, training_data=None,
-                 min_trading_unit=1, max_trading_unit=2,
+                 min_trading_unit=0.001, max_trading_unit=2,
                  delayed_reward_threshold=.05, lr=0.01):
         self.stock_code = stock_code  # 종목코드
         self.chart_data = chart_data
@@ -39,7 +39,7 @@ class PolicyLearner:
         self.training_data_idx = -1
 
     def fit(
-            self, num_epoches=1000, max_memory=60, balance=10000000,
+            self, num_epoches=100, max_memory=60, balance=500000,
             discount_factor=0, start_epsilon=.5, learning=True):
         logger.info("LR: {lr}, DF: {discount_factor}, "
                     "TU: [{min_trading_unit}, {max_trading_unit}], "
@@ -221,7 +221,9 @@ class PolicyLearner:
             return self.sample
         return None
 
-    def trade(self, model_path=None, balance=2000000):
+    def trade(self, model_path=None, balance=300000):
+    # def trade(self, model_path=None, balance=2000000):
+
         if model_path is None:
             return
         self.policy_network.load_model(model_path=model_path)
